@@ -1,0 +1,50 @@
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Environment variables and secrets
+.env
+.env.*
+
+# Datasets (large files)
+content_data/
+style_data/
+data/
+datasets/
+*.zip
+
+# Model checkpoints and weights
+*.pth
+*.pt
+*.ckpt
+*.onnx
+
+# Generated outputs
+outputs/
+results/
+runs/
+experiments/
+
+# Logs
+*.log
+
+# IDE and editor files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
