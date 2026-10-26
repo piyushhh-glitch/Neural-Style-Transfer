@@ -3,6 +3,7 @@ from torch.utils.data import Dataset
 import torchvision
 import torchvision.transforms as transforms
 import os 
+from PIL import Image
 
 class ImageFolderDataset(Dataset):
 
@@ -12,14 +13,14 @@ class ImageFolderDataset(Dataset):
         self.root=root
         self.transform=transform
         self.files=list(os.listdir(self.root))
-        self.files=[p for p in self.files if p.endswith('jpg','png','jpeg')]
+        self.files=[p for p in self.files if p.lower().endswith(('.jpg','.png','.jpeg'))]
 
     def __len__(self):
         return len(self.files)
 
     def __getitem__(self,idx):
         image_path=os.path.join(self.root,self.files[idx])
-        image=Image.open(image_path)
+        image=Image.open(image_path).convert('RGB')
 
         if self.transform:
             image=self.transform(image)
