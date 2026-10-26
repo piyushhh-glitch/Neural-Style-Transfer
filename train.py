@@ -1,7 +1,8 @@
 import argparse
 from pathlib import Path
 import torch
-from utils.utils import ImageFolderDataset
+from utils.utils import ImageFolderDataset,get_transform 
+from torch.utils.data import DataLoader
 
 def parse_arguments():
     parser=argparse.ArgumentParser()
@@ -56,6 +57,20 @@ def main():
 
     content_dataset=ImageFolderDataset(args.content_dir,content_transform)
     style_dataset=ImageFolderDataset(args.style_dir,style_transform)
+
+    content_dataloader=DataLoader(content_dataset,batch_size=args.batch_size,shuffle=True,pin_memory=True,drop_last=True)
+
+    style_dataloader=DataLoader(style_dataset,batch_size=args.batch_size,pin_memory=True,drop_last=True)
+
+
+
+
+
+
+
+
+
+
 
 
 
