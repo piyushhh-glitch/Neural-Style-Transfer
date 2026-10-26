@@ -7,7 +7,7 @@ from utils.utils import *
 from torch.utils.data import DataLoader
 from utils.model import VGGEncoder,Decoder
 import torch.nn as nn 
-
+from torchvision.utils import save_image
 
 def parse_arguments():
     parser=argparse.ArgumentParser()
@@ -21,7 +21,7 @@ def parse_arguments():
     parser.add_argument('--vgg',type=str,default=r'C:\NST\Neural-Style-Transfer\vgg_normalised.pth',
                         help='location of pre-trained VGG')
 
-    parser.add_argument('--experiment',type=str,default=r'experiment1',
+    parser.add_argument('--experiment',type=str,default='experiment1',
                         help='Name of experiment')
 
     parser.add_argument('--final_size',type=int,default=256,
@@ -57,6 +57,18 @@ def parse_arguments():
     parser.add_argument('--log_interval',type=int,default=1,
                         help='Log Interval')
 
+    parser.add_argument('--save_interval',type=int,default=2,
+                        help='Save Interval')
+
+    parser.add_argument('--resume',action='store_true',default=False,
+                        help='Resume Training')
+
+    parser.add_argument('--decoder_path',type=str,default=None,
+                        help='Path to decoder checkpoint')
+
+    parser.add_argument('--optimizer_path',type=str,default=None,
+                        help='Path to optimizer checkpoint')
+    
     return parser.parse_args()
     
 
@@ -83,9 +95,9 @@ def main():
     content_dataset=ImageFolderDataset(args.content_dir,content_transform)
     style_dataset=ImageFolderDataset(args.style_dir,style_transform)
 
-    content_dataloader=DataLoader(content_dataset,batch_size=args.batch_size,shuffle=True,pin_memory=True,drop_last=True)
+    content_dataloader=DataLoader(content_dataset,batch_size=args.batch_size,shuffle=True,pin_memory=(device.type=='cuda'),drop_last=True)
 
-    style_dataloader=DataLoader(style_dataset,batch_size=args.batch_size,pin_memory=True,drop_last=True)
+    style_dataloader=DataLoader(style_dataset,batch_size=args.batch_size,pin_memory=(device.type=='cuda'),drop_last=True)
 
     print('Length -> content :',len(content_dataloader))
     print('Length -> style :',len(style_dataloader))
@@ -99,6 +111,10 @@ def main():
         optimizer=optimizer,
         lr_lambda=lambda epoch:1.0/(1.0+args.lr_decay*epoch)
     )
+
+    if args.resume:
+        decoder.load_state_dict(torch.load(args.decoder_path,map_location=device))
+        optimizer.load_state_dict(torch.load(args.optimizer_path,map_location=device))
 
     mse_loss=nn.MSELoss()
 
@@ -163,7 +179,13 @@ def main():
             tqdm.write(f'Iteration {epoch+1}/{args.epochs} , Loss => {running_loss:4f}, Content loss => {running_content_loss:4f}, Style loss=> {running_style_loss:4f}')
 
 
+        if (epoch+1) % args.save_interval == 0:
+            torch.save(decoder.state_dict(),save_dir/f'decoder_{epoch+1}.pth')
+            torch.save(optimizer.state_dict(),save_dir/f'optimizer_{epoch+1}.pth')
 
+            with torch.no_grad():
+                output=torch.cat([content_batch,style_batch,generated_images],dim=0)
+                save_image(output,save_dir/f'output_{epoch+1}.png',nrow=args.batch_size)
 
 
 
