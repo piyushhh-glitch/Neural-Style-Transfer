@@ -1,9 +1,10 @@
 import argparse
 from pathlib import Path
 import torch
+import torch.optim as optim
 from utils.utils import ImageFolderDataset,get_transform 
 from torch.utils.data import DataLoader
-from models.
+from utils.model import VGGEncoder,Decoder
 
 def parse_arguments():
     parser=argparse.ArgumentParser()
@@ -34,6 +35,12 @@ def parse_arguments():
 
     parser.add_argument('--batch_size',type=int,default=4,
                         help='Batch Size')
+
+    parser.add_argument('--lr',type=float,default=1e-4,
+                        help='Learning Rate')
+
+    parser.add_argument('--lr_decay',type=float,default=5e-5,
+                        help='Learning Rate Decay')
 
     return parser.parse_args()
     
@@ -68,6 +75,16 @@ def main():
 
     print('Length -> content :',len(content_dataloader))
     print('Length -> style :',len(style_dataloader))
+
+    encoder=VGGEncoder(args.vgg).to(device)
+    decoder=Decoder().to(device)
+
+    optimizer=optim.Adam(decoder.parameters(),lr=args.lr)
+
+    sheduler=optim.lr_scheduler.LambdaLR(
+        optimizer=optimizer,
+        lr_lambda=lambda epoch:1.0/(1.0+args.lr_decay*epoch)
+    )
 
 
 
