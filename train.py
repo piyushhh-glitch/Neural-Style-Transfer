@@ -5,16 +5,16 @@ import torch
 def parse_arguments():
     parser=argparse.ArgumentParser()
 
-    parser.add_argument('--content_dir',type=str,default='C:\NST\Neural-Style-Transfer\content_data',
+    parser.add_argument('--content_dir',type=str,default=r'C:\NST\Neural-Style-Transfer\content_data',
                         help='Location of content dataset')
     
-    parser.add_argument('--style_dir',type=str,default='C:\NST\Neural-Style-Transfer\style_data',
+    parser.add_argument('--style_dir',type=str,default=r'C:\NST\Neural-Style-Transfer\style_data',
                         help='location of style dataset')
 
-    parser.add_argument('--vgg',type=str,default='',
+    parser.add_argument('--vgg',type=str,default=r'',
                         help='location of pre-trained VGG')
 
-    parser.add_argument('--experiment',type=str,default='experiment1',
+    parser.add_argument('--experiment',type=str,default=r'experiment1',
                         help='Name of experiment')
 
     return parser.parse_args()
