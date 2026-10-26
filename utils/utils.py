@@ -40,3 +40,9 @@ def get_transform(size,crop,final_size):
     transform_list.append(transforms.ToTensor())
 
     return transforms.Compose(transform_list)
+
+def adaptive_instance_normalization(content_features,style_features):
+    pass
+
+def calc_mean_std(feat,eps=1e-5):
+    pass
