@@ -54,6 +54,9 @@ def parse_arguments():
     parser.add_argument('--style_weight',type=float,default=10,
                         help='Style Weight')
 
+    parser.add_argument('--log_interval',type=int,default=1,
+                        help='Log Interval')
+
     return parser.parse_args()
     
 
@@ -122,7 +125,8 @@ def main():
 
             t=adaptive_instance_normalization(content_features[-1],style_features[-1])
 
-            generated_features=encoder(t)
+            generated_images=decoder(t)
+            generated_features=encoder(generated_images)
 
             content_loss=mse_loss(generated_features[-1],t)*args.content_weight
 
@@ -137,13 +141,13 @@ def main():
 
             style_loss=style_loss*args.style_weight
 
-            loss=content_loss,style_loss
+            loss=content_loss+style_loss
 
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
-            progress_bar.set_description(f'Loss:{running_loss.item():4f},Content Loss:{running_content_loss:4f},Style Loss:{running_style_loss:4f}')
+            progress_bar.set_description(f'Loss:{loss.item():4f},Content Loss:{content_loss.item():4f},Style Loss:{style_loss.item():4f}')
 
             running_loss+=loss.item()
             running_content_loss+=content_loss.item()
