@@ -1,6 +1,7 @@
 import argparse
 from pathlib import Path
 import torch
+from utils.utils import ImageFolderDataset
 
 def parse_arguments():
     parser=argparse.ArgumentParser()
@@ -16,6 +17,18 @@ def parse_arguments():
 
     parser.add_argument('--experiment',type=str,default=r'experiment1',
                         help='Name of experiment')
+
+    parser.add_argument('--final_size',type=int,default=512,
+                        help='Size of Final Image')
+
+    parser.add_argument('--content_size',type=int,default=256,
+                        help='Size of Content Image')
+
+    parser.add_argument('--style_size',type=int,default=256,
+                        help='Size of Style Image')
+
+    parser.add_argument('--crop',action='store_true',default=True
+                        help='Crop Image')
 
     return parser.parse_args()
     
@@ -37,6 +50,14 @@ def main():
     with open(save_dir / 'args.text','w') as args_file:
         for key,value in vars(args).items():
             args_file.write(f'{key}:{value}\n')
+
+    content_transform=get_transform(args.content_size,args.crop,args.final_size)
+    style_transform=get_transform(args.style_size,args.crop,args.final_size)
+
+    content_dataset=ImageFolderDataset(args.content_dir,content_transform)
+    style_dataset=ImageFolderDataset(args.style_dir,style_transform)
+
+
 
 if __name__=='__main__':
     main()

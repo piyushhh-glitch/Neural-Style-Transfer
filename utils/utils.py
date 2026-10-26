@@ -1,22 +1,41 @@
 import torch
-from torch.utils.data import Dataset, DataLoader 
+from torch.utils.data import Dataset
+import torchvision
+import torchvision.transforms as transforms
+import os 
 
 class ImageFolderDataset(Dataset):
-    def __init__(self,root,transform):
+
+    def __init__(self,root,transform=None):
         super(ImageFolderDataset,self).__init__()
-        self.root=Path(root)
+
+        self.root=root
         self.transform=transform
-        self.paths=list(self.root.glob('*'))
-
-
-    def __getitem__(self,idx):
-        path=self.paths[idx]
-        img=Image.open(str(path)).convert('RGB')
-        img=self.transform(img)
-        return img
+        self.files=list(os.listdir(self.root))
+        self.files=[p for p in self.files if p.endswith('jpg','png','jpeg')]
 
     def __len__(self):
-        return len(self.paths)
+        return len(self.files)
 
-    def __name__(self):
-        return 'ImageFolderDataset'
+    def __getitem__(self,idx):
+        image_path=os.path.join(self.root,self.files[idx])
+        image=Image.open(image_path)
+
+        if self.transform:
+            image=self.transform(image)
+
+        return image
+
+def get_transform(size,crop,final_size):
+    transform_list=[]
+
+    if size>0:
+        transform_list.append(transforms.Resize(size))
+    if crop:
+        transform_list.append(transforms.RandomCrop(final_size))
+    else:
+        transform_list.append(transforms.Resize(final_size))
+
+    transform_list.append(transforms.ToTensor())
+
+    return transforms.Compose(transform_list)
