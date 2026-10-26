@@ -188,8 +188,5 @@ def main():
                 save_image(output,save_dir/f'output_{epoch+1}.png',nrow=args.batch_size)
 
 
-
-
-
 if __name__=='__main__':
     main()
