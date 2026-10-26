@@ -42,7 +42,16 @@ def get_transform(size,crop,final_size):
     return transforms.Compose(transform_list)
 
 def adaptive_instance_normalization(content_features,style_features):
-    pass
+    # Batch size, channels, height, width
+    
 
 def calc_mean_std(feat,eps=1e-5):
-    pass
+    size=feat.size()
+    assert(len(size)==4)
+
+    batch_size,channels=size[:2]
+
+    feat_mean=feat.view(batch_size,channels,-1).mean(dim=2).view(batch_size,channels,1,1)
+    feat_var=feat.view(batch_size,channels,-1).var(dim=2,unbiased=False)+eps
+    feat_std=feat_var.sqrt().view(batch_size,channels,1,1)
+    return feat_mean,feat_std

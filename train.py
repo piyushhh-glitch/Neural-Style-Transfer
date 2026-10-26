@@ -143,6 +143,8 @@ def main():
             loss.backward()
             optimizer.step()
 
+            progress_bar.set_description(f'Loss:{running_loss.item():4f},Content Loss:{running_content_loss:4f},Style Loss:{running_style_loss:4f}')
+
             running_loss+=loss.item()
             running_content_loss+=content_loss.item()
             running_style_loss+=style_loss.item()
