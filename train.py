@@ -103,7 +103,29 @@ def main():
     print('Length -> style :',len(style_dataloader))
 
     encoder=VGGEncoder(args.vgg).to(device)
+
+    encoder.eval()
+
     decoder=Decoder().to(device)
+
+    decoder_path=Path('decoder_final.pth')
+
+    weights=torch.load(
+        decoder_path,
+        map_location=device,
+        weights_only=True
+    )
+
+    weights = {
+        key.replace("net.", "decoder.", 1)
+        if key.startswith("net.") else key: value
+        for key, value in weights.items()
+    }
+
+    decoder.load_state_dict(weights, strict=True)
+
+    print("Pretrained AdaIN decoder loaded successfully!")
+
 
     optimizer=optim.Adam(decoder.parameters(),lr=args.lr)
 
