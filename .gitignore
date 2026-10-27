@@ -54,3 +54,7 @@ cleaned_data/
 .venv/
 __pycache__/
 *.pyc
+
+content_dataset/
+style_dataset/
+cleaned_data/
