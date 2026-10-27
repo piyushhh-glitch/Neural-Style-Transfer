@@ -51,7 +51,7 @@ def parse_arguments():
     parser.add_argument('--content_weight',type=float,default=1.0,
                         help='Content Weight')
 
-    parser.add_argument('--style_weight',type=float,default=10,
+    parser.add_argument('--style_weight',type=float,default=5,
                         help='Style Weight')
 
     parser.add_argument('--log_interval',type=int,default=1,
@@ -97,7 +97,7 @@ def main():
 
     content_dataloader=DataLoader(content_dataset,batch_size=args.batch_size,shuffle=True,pin_memory=(device.type=='cuda'),drop_last=True)
 
-    style_dataloader=DataLoader(style_dataset,batch_size=args.batch_size,pin_memory=(device.type=='cuda'),drop_last=True)
+    style_dataloader=DataLoader(style_dataset,batch_size=args.batch_size,shuffle=True,pin_memory=(device.type=='cuda'),drop_last=True)
 
     print('Length -> content :',len(content_dataloader))
     print('Length -> style :',len(style_dataloader))
@@ -163,7 +163,7 @@ def main():
             loss.backward()
             optimizer.step()
 
-            progress_bar.set_description(f'Loss:{loss.item():4f},Content Loss:{content_loss.item():4f},Style Loss:{style_loss.item():4f}')
+            progress_bar.set_description(f'Epoch:{epoch+1},Loss:{loss.item():4f},Content Loss:{content_loss.item():4f},Style Loss:{style_loss.item():4f}')
 
             running_loss+=loss.item()
             running_content_loss+=content_loss.item()

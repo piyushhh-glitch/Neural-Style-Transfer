@@ -3,7 +3,7 @@ from torch.utils.data import Dataset
 import torchvision
 import torchvision.transforms as transforms
 import os 
-from PIL import Image
+from PIL import Image,ImageFile
 
 class ImageFolderDataset(Dataset):
 
@@ -20,6 +20,7 @@ class ImageFolderDataset(Dataset):
 
     def __getitem__(self,idx):
         image_path=os.path.join(self.root,self.files[idx])
+       
         image=Image.open(image_path).convert('RGB')
 
         if self.transform:
