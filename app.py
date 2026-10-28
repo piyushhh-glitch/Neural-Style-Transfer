@@ -54,13 +54,13 @@ def allowed_file(filename):
 def style_transfer(content_image,style_image,encoder,decoder,alpha,device):
     content_transform=transforms.Compose(
         [
-            transforms.Resize((512,512)),
+            transforms.Resize((256,256)),
             transforms.ToTensor()
         ]
     )
     style_transforms=transforms.Compose(
         [
-            transforms.Resize((512,512)),
+            transforms.Resize((256,256)),
             transforms.ToTensor()
         ]
     )

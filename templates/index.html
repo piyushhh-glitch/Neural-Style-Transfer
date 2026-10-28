@@ -1,10 +1,10 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>StyleForge AI | Neural Style Transfer</title>
+    <title>NeuroBrush | Neural Style Transfer</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -16,7 +16,7 @@
             background-color: #0f172a;
             color: #e2e8f0;
             background-image:
-                linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.95)),
+                linear-gradient(rgba(15, 23, 42, 0.90), rgba(15, 23, 42, 0.95)),
                 url('https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1974&auto=format&fit=crop');
             background-size: cover;
             background-attachment: fixed;
@@ -47,7 +47,7 @@
         }
 
         .card {
-            background: rgba(30, 41, 59, 0.7);
+            background: rgba(30, 41, 59, 0.72);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
@@ -72,7 +72,6 @@
         .preview-image {
             width: 100%;
             height: 300px;
-            object-fit: contain;
             background-color: #0f172a;
             border: 2px dashed #334155;
             border-radius: 10px;
@@ -127,6 +126,7 @@
 
         #alphaRange {
             appearance: none;
+            -webkit-appearance: none;
             width: 100%;
             height: 12px;
             background: rgba(30, 41, 59, 0.8);
@@ -137,6 +137,7 @@
 
         #alphaRange::-webkit-slider-thumb {
             appearance: none;
+            -webkit-appearance: none;
             height: 24px;
             width: 24px;
             border-radius: 50%;
@@ -144,6 +145,16 @@
             cursor: pointer;
             box-shadow: 0 0 10px #c084fc, 0 0 20px #818cf8;
             border: 3px solid #1e293b;
+        }
+
+        #alphaRange::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            border: 3px solid #1e293b;
+            box-shadow: 0 0 10px #c084fc;
         }
 
         .range-value {
@@ -157,6 +168,7 @@
             border-radius: 15px;
             font-family: 'Orbitron', sans-serif;
             font-size: 0.85rem;
+            white-space: nowrap;
         }
 
         .form-control {
@@ -212,6 +224,8 @@
             padding: 3rem 0 2rem;
             margin-top: 5rem;
             color: #94a3b8;
+            position: relative;
+            z-index: 1;
         }
 
         .footer-section h5 {
@@ -253,8 +267,10 @@
         }
 
         .examples-section,
-        .faq-section {
+        .how-section {
             margin-top: 4rem;
+            position: relative;
+            z-index: 1;
         }
 
         .example-image {
@@ -302,32 +318,70 @@
             font-weight: 700;
         }
 
-        .faq-section .accordion-item {
-            background: rgba(30, 41, 59, 0.7);
+        /* Three compact How It Works cards */
+        .how-section .card-body {
+            padding: 1rem;
+        }
+
+        .how-card {
+            padding: 1rem;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.72);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 0.75rem;
-            border-radius: 12px;
-            overflow: hidden;
+            border-radius: 14px;
+            transition: border-color 0.25s ease, transform 0.25s ease;
         }
 
-        .faq-section .accordion-button {
-            background: rgba(15, 23, 42, 0.85);
-            color: #e2e8f0;
-            font-weight: 600;
+        .how-card:hover {
+            border-color: rgba(192, 132, 252, 0.55);
+            transform: translateY(-3px);
         }
 
-        .faq-section .accordion-button:not(.collapsed) {
-            background: rgba(129, 140, 248, 0.2);
+        .how-number {
+            color: #c084fc;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.08em;
+        }
+
+        .how-card h5 {
             color: #f8fafc;
-            box-shadow: none;
+            font-size: 0.92rem;
+            margin-bottom: 0.4rem;
         }
 
-        .faq-section .accordion-button:focus {
-            box-shadow: 0 0 0 0.2rem rgba(129, 140, 248, 0.2);
-        }
-
-        .faq-section .accordion-body {
+        .how-card p {
             color: #cbd5e1;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        /* Animated neural network background */
+        #neuralCanvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.58;
+        }
+
+        /* Keep page content above the canvas */
+        body > nav,
+        body > header,
+        body > main,
+        body > section,
+        body > footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navbar stays above content */
+        body > nav {
+            z-index: 100;
         }
 
         .loader-overlay {
@@ -368,8 +422,8 @@
             position: fixed;
             border-radius: 50%;
             filter: blur(100px);
-            z-index: -1;
-            opacity: 0.3;
+            z-index: 0;
+            opacity: 0.22;
             pointer-events: none;
         }
 
@@ -410,18 +464,44 @@
             .header-section {
                 padding-top: 6rem;
             }
+
+            .how-card {
+                padding: 0.9rem;
+            }
+
+            .preview-image {
+                height: 240px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .fade-in-up,
+            .btn-glow,
+            .cyber-spinner {
+                animation: none;
+            }
+
+            .how-card,
+            .card,
+            .btn-primary {
+                transition: none;
+            }
         }
     </style>
 </head>
 
 <body>
+    <!-- Animated background canvas -->
+    <canvas id="neuralCanvas" aria-hidden="true"></canvas>
+
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
 
+    <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">
-                <i class="fas fa-brain me-2"></i>StyleForge AI
+                <i class="fas fa-brain me-2"></i>NeuroBrush
             </a>
 
             <button class="navbar-toggler navbar-dark" type="button"
@@ -433,76 +513,123 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#examples">Examples</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#faqs">FAQs</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#examples">Examples</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-it-works">How It Works</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
+    <!-- HERO -->
     <header class="header-section">
         <div class="container">
-            <h1>STYLEFORGE AI</h1>
+            <h1>NEUROBRUSH</h1>
             <p class="lead">Redefine Reality with AI-Powered Artistry</p>
-            <p class="text-secondary">Transform your images using neural style transfer.</p>
+            <p class="text-secondary">
+                Transform your images using neural style transfer.
+            </p>
         </div>
     </header>
 
+    <!-- IMAGE UPLOAD AND STYLE TRANSFER -->
     <main class="container mb-5 fade-in-up" id="features">
         <form method="post" enctype="multipart/form-data" id="uploadForm">
             {{ form.hidden_tag() }}
 
             <div class="row g-4">
+                <!-- CONTENT IMAGE -->
                 <div class="col-md-6">
                     <div class="card h-100">
-                        <div class="card-header text-center py-3">Content Image</div>
+                        <div class="card-header text-center py-3">
+                            Content Image
+                        </div>
+
                         <div class="card-body text-center">
                             <div class="preview-image mb-3" id="contentPreview">
                                 {% if content_image %}
-                                    <img src="{{ url_for('send_image', filename=content_image) }}" alt="Content image">
+                                    <img
+                                        src="{{ url_for('send_image', filename=content_image) }}"
+                                        alt="Content image"
+                                    >
                                 {% else %}
                                     <span>Select Content Image</span>
                                 {% endif %}
                             </div>
 
-                            {{ form.content(class="form-control", accept="image/png,image/jpeg", onchange="previewFile(this, 'contentPreview')") }}
+                            {{ form.content(
+                                class="form-control",
+                                accept="image/png,image/jpeg",
+                                onchange="previewFile(this, 'contentPreview')"
+                            ) }}
                         </div>
                     </div>
                 </div>
 
+                <!-- STYLE IMAGE -->
                 <div class="col-md-6">
                     <div class="card h-100">
-                        <div class="card-header text-center py-3">Style Reference</div>
+                        <div class="card-header text-center py-3">
+                            Style Reference
+                        </div>
+
                         <div class="card-body text-center">
                             <div class="preview-image mb-3" id="stylePreview">
                                 {% if style_image %}
-                                    <img src="{{ url_for('send_image', filename=style_image) }}" alt="Style reference">
+                                    <img
+                                        src="{{ url_for('send_image', filename=style_image) }}"
+                                        alt="Style reference"
+                                    >
                                 {% else %}
                                     <span>Select Style Image</span>
                                 {% endif %}
                             </div>
 
-                            {{ form.style(class="form-control", accept="image/png,image/jpeg", onchange="previewFile(this, 'stylePreview')") }}
+                            {{ form.style(
+                                class="form-control",
+                                accept="image/png,image/jpeg",
+                                onchange="previewFile(this, 'stylePreview')"
+                            ) }}
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- STYLE STRENGTH -->
             <div class="row justify-content-center mt-4">
                 <div class="col-md-8">
                     <div class="range-wrap">
-                        <label for="alphaRange"
-                               class="form-label fw-bold mb-3 d-block text-center"
-                               style="font-family: 'Orbitron', sans-serif; color: #c084fc;">
+                        <label
+                            for="alphaRange"
+                            class="form-label fw-bold mb-3 d-block text-center"
+                            style="font-family: 'Orbitron', sans-serif; color: #c084fc;"
+                        >
                             STYLE STRENGTH
                         </label>
 
                         <div class="position-relative">
                             <div class="range-value" id="rangeValue">1.0</div>
-                            {{ form.alpha(class="form-control-range", id="alphaRange", type="range", min="0", max="1", step="0.1") }}
+
+                            {{ form.alpha(
+                                class="form-control-range",
+                                id="alphaRange",
+                                type="range",
+                                min="0",
+                                max="1",
+                                step="0.1"
+                            ) }}
                         </div>
                     </div>
 
@@ -513,12 +640,14 @@
             </div>
         </form>
 
+        <!-- ERROR MESSAGE -->
         {% if error %}
             <div class="alert alert-danger mt-4 text-center" role="alert">
                 <strong>Error:</strong> {{ error }}
             </div>
         {% endif %}
 
+        <!-- GENERATED RESULT -->
         {% if result_image %}
             <div class="row justify-content-center mt-5" id="resultSection">
                 <div class="col-md-8">
@@ -528,16 +657,23 @@
                         </div>
 
                         <div class="card-body p-0">
-                            <img src="{{ url_for('send_image', filename=result_image) }}"
-                                 class="img-fluid w-100"
-                                 alt="Stylized result"
-                                 style="border-radius: 0 0 20px 20px;">
+                            <img
+                                src="{{ url_for('send_image', filename=result_image) }}"
+                                class="img-fluid w-100"
+                                alt="Stylized result"
+                                style="border-radius: 0 0 20px 20px;"
+                            >
                         </div>
 
-                        <div class="card-footer text-center"
-                             style="background: transparent; border-top: none; padding-bottom: 20px;">
-                            <a href="{{ url_for('send_image', filename=result_image) }}"
-                               download class="btn btn-outline-light mt-2">
+                        <div
+                            class="card-footer text-center"
+                            style="background: transparent; border-top: none; padding-bottom: 20px;"
+                        >
+                            <a
+                                href="{{ url_for('send_image', filename=result_image) }}"
+                                download
+                                class="btn btn-outline-light mt-2"
+                            >
                                 <i class="fas fa-download me-2"></i>Download Result
                             </a>
                         </div>
@@ -547,6 +683,7 @@
         {% endif %}
     </main>
 
+    <!-- EXAMPLES -->
     <section class="container examples-section fade-in-up" id="examples">
         <div class="card">
             <div class="card-header text-center py-3">Examples</div>
@@ -562,14 +699,20 @@
                             <div class="example-inputs">
                                 <div>
                                     <div class="example-role">Content Image</div>
-                                    <img src="{{ url_for('send_example', filename='brad_pitt.jpg') }}"
-                                         alt="Example content image" class="example-image">
+                                    <img
+                                        src="{{ url_for('send_example', filename='brad_pitt.jpg') }}"
+                                        alt="Example content image"
+                                        class="example-image"
+                                    >
                                 </div>
 
                                 <div>
                                     <div class="example-role">Style Image</div>
-                                    <img src="{{ url_for('send_example', filename='sketch.png') }}"
-                                         alt="Sketch style reference" class="example-image">
+                                    <img
+                                        src="{{ url_for('send_example', filename='sketch.png') }}"
+                                        alt="Sketch style reference"
+                                        class="example-image"
+                                    >
                                 </div>
                             </div>
 
@@ -577,8 +720,11 @@
 
                             <div class="example-output">
                                 <div class="example-role">Output</div>
-                                <img src="{{ url_for('send_example', filename='stylized_brad_pitt.jpg') }}"
-                                     alt="Sketch style output" class="example-image">
+                                <img
+                                    src="{{ url_for('send_example', filename='stylized_brad_pitt.jpg') }}"
+                                    alt="Sketch style output"
+                                    class="example-image"
+                                >
                             </div>
                         </div>
                     </div>
@@ -588,14 +734,20 @@
                             <div class="example-inputs">
                                 <div>
                                     <div class="example-role">Content Image</div>
-                                    <img src="{{ url_for('send_example', filename='brad_pitt.jpg') }}"
-                                         alt="Example content image" class="example-image">
+                                    <img
+                                        src="{{ url_for('send_example', filename='brad_pitt.jpg') }}"
+                                        alt="Example content image"
+                                        class="example-image"
+                                    >
                                 </div>
 
                                 <div>
                                     <div class="example-role">Style Image</div>
-                                    <img src="{{ url_for('send_example', filename='picasso_seated_nude_hr.jpg') }}"
-                                         alt="Painting style reference" class="example-image">
+                                    <img
+                                        src="{{ url_for('send_example', filename='picasso_seated_nude_hr.jpg') }}"
+                                        alt="Painting style reference"
+                                        class="example-image"
+                                    >
                                 </div>
                             </div>
 
@@ -603,8 +755,11 @@
 
                             <div class="example-output">
                                 <div class="example-role">Output</div>
-                                <img src="{{ url_for('send_example', filename='stylized_brad_pitt2.jpg') }}"
-                                     alt="Painting style output" class="example-image">
+                                <img
+                                    src="{{ url_for('send_example', filename='stylized_brad_pitt2.jpg') }}"
+                                    alt="Painting style output"
+                                    class="example-image"
+                                >
                             </div>
                         </div>
                     </div>
@@ -613,88 +768,43 @@
         </div>
     </section>
 
-    <section class="container faq-section fade-in-up" id="faqs">
+    <!-- HOW IT WORKS: THREE SMALL CARDS -->
+    <section class="container how-section fade-in-up" id="how-it-works">
         <div class="card">
-            <div class="card-header text-center py-3">Frequently Asked Questions</div>
+            <div class="card-header text-center py-3">How It Works</div>
 
             <div class="card-body">
-                <div class="accordion" id="faqAccordion">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="faqHeadingOne">
-                            <button class="accordion-button collapsed" type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#faqOne">
-                                1. Is this a pretrained model?
-                            </button>
-                        </h2>
-                        <div id="faqOne" class="accordion-collapse collapse"
-                             data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                The AdaIN style transfer approach uses an encoder and decoder.
-                                This application loads trained model weights to generate stylized images.
-                            </div>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="how-card">
+                            <div class="how-number">01 / ENCODER</div>
+                            <h5>Feature Extraction</h5>
+                            <p>
+                                VGG extracts important features from the content
+                                and style images.
+                            </p>
                         </div>
                     </div>
 
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="faqHeadingTwo">
-                            <button class="accordion-button collapsed" type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#faqTwo">
-                                2. Is StyleForge AI free to use?
-                            </button>
-                        </h2>
-                        <div id="faqTwo" class="accordion-collapse collapse"
-                             data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                This local project demo can be used without a paid subscription.
-                            </div>
+                    <div class="col-md-4">
+                        <div class="how-card">
+                            <div class="how-number">02 / ADAIN</div>
+                            <h5>Style Transfer</h5>
+                            <p>
+                                AdaIN aligns style statistics with content features.
+                                Alpha controls the strength of the effect.
+                            </p>
                         </div>
                     </div>
 
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="faqHeadingThree">
-                            <button class="accordion-button collapsed" type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#faqThree">
-                                3. Which styles can I use?
-                            </button>
-                        </h2>
-                        <div id="faqThree" class="accordion-collapse collapse"
-                             data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                You can use paintings, sketches, abstract art, watercolor images
-                                and many other images as style references.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="faqHeadingFour">
-                            <button class="accordion-button collapsed" type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#faqFour">
-                                4. What is the technology stack?
-                            </button>
-                        </h2>
-                        <div id="faqFour" class="accordion-collapse collapse"
-                             data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Python, PyTorch, Torchvision, Flask, HTML, CSS, JavaScript and Bootstrap.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="faqHeadingFive">
-                            <button class="accordion-button collapsed" type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#faqFive">
-                                5. What does the style strength control do?
-                            </button>
-                        </h2>
-                        <div id="faqFive" class="accordion-collapse collapse"
-                             data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Style strength controls the blend between the style-transferred
-                                features and the original content features. A higher value applies
-                                more style; a lower value preserves more of the original content.
-                            </div>
+                    <div class="col-md-4">
+                        <div class="how-card">
+                            <div class="how-number">03 / DECODER</div>
+                            <h5>Image Reconstruction</h5>
+                            <p>
+                                The decoder creates the final stylized image,
+                                which Flask returns to the user.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -702,18 +812,23 @@
         </div>
     </section>
 
+    <!-- CONTACT / FOOTER -->
     <footer class="footer-section" id="contact">
         <div class="container">
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
-                    <h5><i class="fas fa-brain me-2"></i>StyleForge AI</h5>
+                    <h5>
+                        <i class="fas fa-brain me-2"></i>NeuroBrush
+                    </h5>
 
                     <p class="mb-4">
-                        Transform ordinary images into artistic creations using neural style transfer.
+                        Transform ordinary images into artistic creations
+                        using neural style transfer.
                     </p>
 
                     <p class="small text-secondary">
-                        An AI-powered image stylization project built with Python, PyTorch and Flask.
+                        An AI-powered image stylization project built with
+                        Python, PyTorch and Flask.
                     </p>
                 </div>
 
@@ -722,7 +837,7 @@
                     <a href="{{ url_for('index') }}" class="footer-link">Home</a>
                     <a href="#examples" class="footer-link">Examples</a>
                     <a href="#features" class="footer-link">Features</a>
-                    <a href="#faqs" class="footer-link">FAQs</a>
+                    <a href="#how-it-works" class="footer-link">How It Works</a>
                 </div>
 
                 <div class="col-lg-3 col-md-6">
@@ -734,8 +849,10 @@
 
                     <p class="mb-2">
                         <i class="fas fa-envelope me-2"></i>
-                        <a href="mailto:piyushthakur1611@gmail.com"
-                           class="footer-link d-inline">
+                        <a
+                            href="mailto:piyushthakur1611@gmail.com"
+                            class="footer-link d-inline"
+                        >
                             piyushthakur1611@gmail.com
                         </a>
                     </p>
@@ -752,11 +869,13 @@
                     <h5>Connect</h5>
 
                     <div class="d-flex mb-3">
-                        <a href="https://www.linkedin.com/feed/"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           class="social-icon"
-                           aria-label="LinkedIn">
+                        <a
+                            href="https://www.linkedin.com/feed/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="social-icon"
+                            aria-label="LinkedIn"
+                        >
                             <i class="fab fa-linkedin-in"></i>
                         </a>
                     </div>
@@ -770,27 +889,39 @@
             <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
 
             <div class="text-center text-secondary small">
-                &copy; 2026 StyleForge AI. Built by Piyush Thakur.
+                &copy; 2026 NeuroBrush. Built by Piyush Thakur.
             </div>
         </div>
     </footer>
 
+    <!-- PROCESSING LOADER -->
     <div class="loader-overlay" id="loader">
         <div class="cyber-spinner mb-4"></div>
+
         <h3 style="font-family: 'Orbitron', sans-serif; letter-spacing: 2px;">
             PROCESSING
         </h3>
-        <p class="text-secondary">StyleForge AI is creating your artwork...</p>
+
+        <p class="text-secondary">
+            NeuroBrush is creating your artwork...
+        </p>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- IMAGE PREVIEW, SLIDER AND LOADER -->
     <script>
         function previewFile(input, previewId) {
             const preview = document.getElementById(previewId);
-            const file = input.files[0];
+            const file = input.files && input.files[0];
 
-            if (!file) {
+            if (!preview) return;
+
+            if (!file) return;
+
+            if (!file.type.startsWith("image/")) {
+                alert("Please select a valid image file.");
+                input.value = "";
                 return;
             }
 
@@ -804,6 +935,10 @@
                 image.alt = "Image preview";
 
                 preview.appendChild(image);
+            });
+
+            reader.addEventListener("error", function () {
+                alert("Could not preview this image. Please try another file.");
             });
 
             reader.readAsDataURL(file);
@@ -825,17 +960,18 @@
             const loader = document.getElementById("loader");
 
             function updateRange() {
-                if (!range || !rangeValue) {
-                    return;
-                }
+                if (!range || !rangeValue) return;
 
                 const value = Number(range.value);
                 const min = Number(range.min || 0);
                 const max = Number(range.max || 1);
-                const percentage = ((value - min) * 100) / (max - min);
+                const percentage = max === min
+                    ? 0
+                    : ((value - min) * 100) / (max - min);
 
                 rangeValue.textContent = value.toFixed(1);
-                rangeValue.style.left = `calc(${percentage}% + ${12 - percentage * 0.24}px)`;
+                rangeValue.style.left =
+                    `calc(${percentage}% + ${12 - percentage * 0.24}px)`;
 
                 range.style.background =
                     `linear-gradient(to right,
@@ -852,10 +988,174 @@
 
             if (uploadForm && loader) {
                 uploadForm.addEventListener("submit", function () {
+                    const contentInput = uploadForm.querySelector(
+                        'input[name="content"]'
+                    );
+                    const styleInput = uploadForm.querySelector(
+                        'input[name="style"]'
+                    );
+
+                    if (
+                        contentInput && styleInput &&
+                        (!contentInput.files.length || !styleInput.files.length)
+                    ) {
+                        return;
+                    }
+
                     loader.classList.add("active");
                 });
             }
         });
     </script>
+
+    <!-- ANIMATED NEURAL NETWORK BACKGROUND -->
+    <script>
+        (() => {
+            const canvas = document.getElementById("neuralCanvas");
+            if (!canvas) return;
+
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return;
+
+            let width = 0;
+            let height = 0;
+            let nodes = [];
+            let animationId = null;
+
+            const connectionDistance = 145;
+            const reducedMotion = window.matchMedia(
+                "(prefers-reduced-motion: reduce)"
+            );
+
+            function resizeCanvas() {
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+                width = window.innerWidth;
+                height = window.innerHeight;
+
+                canvas.width = Math.round(width * dpr);
+                canvas.height = Math.round(height * dpr);
+                canvas.style.width = width + "px";
+                canvas.style.height = height + "px";
+
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+                const count = Math.min(
+                    115,
+                    Math.max(35, Math.floor((width * height) / 14000))
+                );
+
+                nodes = Array.from({ length: count }, () => ({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.32,
+                    vy: (Math.random() - 0.5) * 0.32,
+                    radius: Math.random() * 1.4 + 0.8,
+                    phase: Math.random() * Math.PI * 2
+                }));
+            }
+
+            function draw(time = 0) {
+                ctx.clearRect(0, 0, width, height);
+
+                // Slowly move neuron nodes.
+                nodes.forEach(node => {
+                    if (!reducedMotion.matches) {
+                        node.x += node.vx;
+                        node.y += node.vy;
+
+                        if (node.x < 0 || node.x > width) {
+                            node.vx *= -1;
+                        }
+
+                        if (node.y < 0 || node.y > height) {
+                            node.vy *= -1;
+                        }
+                    }
+
+                    node.x = Math.max(0, Math.min(width, node.x));
+                    node.y = Math.max(0, Math.min(height, node.y));
+                });
+
+                // Draw connections between nearby nodes.
+                for (let i = 0; i < nodes.length; i++) {
+                    for (let j = i + 1; j < nodes.length; j++) {
+                        const a = nodes[i];
+                        const b = nodes[j];
+
+                        const dx = b.x - a.x;
+                        const dy = b.y - a.y;
+                        const distance = Math.hypot(dx, dy);
+
+                        if (distance < connectionDistance) {
+                            const opacity =
+                                (1 - distance / connectionDistance) * 0.28;
+
+                            ctx.beginPath();
+                            ctx.moveTo(a.x, a.y);
+                            ctx.lineTo(b.x, b.y);
+                            ctx.strokeStyle =
+                                `rgba(129, 140, 248, ${opacity})`;
+                            ctx.lineWidth = 0.7;
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                // Draw softly glowing neuron nodes.
+                nodes.forEach((node, index) => {
+                    const pulse = reducedMotion.matches
+                        ? 1
+                        : 0.78 + Math.sin(time * 0.0014 + node.phase) * 0.22;
+
+                    const radius = node.radius * pulse;
+
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, radius * 3, 0, Math.PI * 2);
+
+                    ctx.fillStyle = index % 3 === 0
+                        ? "rgba(192, 132, 252, 0.10)"
+                        : "rgba(96, 165, 250, 0.10)";
+
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
+
+                    ctx.fillStyle = index % 3 === 0
+                        ? "rgba(216, 180, 254, 0.85)"
+                        : "rgba(147, 197, 253, 0.82)";
+
+                    ctx.fill();
+                });
+
+                if (!reducedMotion.matches) {
+                    animationId = requestAnimationFrame(draw);
+                }
+            }
+
+            function startAnimation() {
+                if (animationId !== null) {
+                    cancelAnimationFrame(animationId);
+                }
+
+                animationId = null;
+                draw();
+            }
+
+            resizeCanvas();
+            startAnimation();
+
+            window.addEventListener("resize", function () {
+                resizeCanvas();
+                startAnimation();
+            });
+
+            if (reducedMotion.addEventListener) {
+                reducedMotion.addEventListener("change", startAnimation);
+            }
+        })();
+    </script>
 </body>
 </html>
+```
