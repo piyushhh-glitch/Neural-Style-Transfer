@@ -150,7 +150,10 @@ def send_image(filename):
 
 @app.route('/examples/<path:filename>')
 def send_example(filename):
-    return send_from_directory("examples",filename)
+    return send_from_directory(
+        os.path.join(app.root_path, "examples"),
+        filename
+    )
 
 if __name__=='__main__':
     from werkzeug.serving import run_simple
