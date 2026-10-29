@@ -33,7 +33,7 @@ class UploadForm(FlaskForm):
     alpha=FloatField('Alpha',validators=[InputRequired(), NumberRange(min=0, max=1)])
     submit=SubmitField('Transfer Style')
 
-device=torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device=torch.device("cpu")
 
 encoder=VGGEncoder('vgg_normalised.pth').to(device)
 
