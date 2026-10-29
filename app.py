@@ -33,7 +33,7 @@ class UploadForm(FlaskForm):
     alpha=FloatField('Alpha',validators=[InputRequired(), NumberRange(min=0, max=1)])
     submit=SubmitField('Transfer Style')
 
-device=torch.device("cpu")
+device=torch.device("cuda")
 
 encoder=VGGEncoder('vgg_normalised.pth').to(device)
 
@@ -54,7 +54,7 @@ def allowed_file(filename):
 def style_transfer(content_image,style_image,encoder,decoder,alpha,device):
     content_transform=transforms.Compose(
         [
-            transforms.Resize((256,256)),
+            transforms.Resize((512,512)),
             transforms.ToTensor()
         ]
     )
